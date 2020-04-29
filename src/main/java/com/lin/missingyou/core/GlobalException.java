@@ -1,6 +1,6 @@
 /**
  * @作者 努力中的杨先生
- * @描述 简要描述
+ * @描述 全局异常处理
  * @创建时间 2020-04-28 17:26
  */
 package com.lin.missingyou.core;
@@ -12,12 +12,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
+import java.util.List;
 
 @ControllerAdvice
 @ResponseBody
@@ -53,4 +54,42 @@ public class GlobalException {
         return r;
     }
 
+    // 校验参数异常(body形式)
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public UnifyException hanldeMethodArgumentNotValidException(HttpServletRequest req, MethodArgumentNotValidException e){
+        String url = req.getRequestURI();
+        String method = req.getMethod();
+        // 拿到所有的验证异常
+        List<ObjectError> errors = e.getBindingResult().getAllErrors();
+        String messages = format(errors);
+        return new UnifyException(10001,messages,method+" "+url);
+    }
+    private String format(List<ObjectError> errors){
+        // 获取错误信息数组 将数组拼接成字符串
+        StringBuffer errorMsg = new StringBuffer();
+        errors.forEach(error-> errorMsg.append(error.getDefaultMessage()).append(";"));;
+        return errorMsg.toString();
+    }
+
+    // 校验参数异常(在url显示)
+
+    @ExceptionHandler(value= ConstraintViolationException.class)
+    @ResponseStatus(code= HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public UnifyException handlerConstrainException(HttpServletRequest req, ConstraintViolationException e) {
+        String requestUrl = req.getRequestURI();
+        String method = req.getMethod();
+
+        //这里如果有多个错误 是拼接好的，但是如果需要特殊处理，就不能用它了
+        String message = e.getMessage();
+        /*
+        // 自定义错误信息时
+        for (ConstraintViolation error:e.getConstraintViolations()) {
+            ConstraintViolation a = error;
+        }
+        */
+        return new UnifyException(10001,message,method + " " + requestUrl);
+    }
 }

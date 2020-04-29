@@ -10,10 +10,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
-/*
- * @ConfigurationProperties 配置文件前缀
- * @PropertySource 引入配置文件
- */
 @ConfigurationProperties(prefix = "lin")
 @PropertySource(value = "classpath:config/exception-code.properties")
 @Component
