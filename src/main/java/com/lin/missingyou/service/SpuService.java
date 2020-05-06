@@ -6,7 +6,7 @@
 package com.lin.missingyou.service;
 
 import com.lin.missingyou.model.Spu;
-import com.lin.missingyou.repository.SpuRepositpry;
+import com.lin.missingyou.repository.SpuRespository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,13 +19,13 @@ import java.util.List;
 @Service
 public class SpuService {
     @Autowired
-    SpuRepositpry spuRepositpry;
+    SpuRespository spuRepositpry;
     public Spu getSpuById(Long id){
         return spuRepositpry.findOneById(id);
     }
-    public Page<Spu> getLatestSpuList(Integer pageNum, Integer size){
-        Pageable pageable = PageRequest.of(pageNum,size, Sort.by("create_time").descending());
-        return  this.spuRepositpry.findAll(pageable);
+    public Page<Spu> getLatestPagingSpu(Integer pageNum, Integer size){
+        Pageable pageable = PageRequest.of(pageNum,size, Sort.by("createTime").descending());
+        return this.spuRepositpry.findAll(pageable);
     }
 
 }

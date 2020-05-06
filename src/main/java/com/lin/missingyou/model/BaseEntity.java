@@ -9,16 +9,21 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import java.sql.Timestamp;
 import java.util.Date;
 @Getter
 @Setter
 @MappedSuperclass
 public abstract class BaseEntity {
     @JsonIgnore
-    private Date create_time;
+    @Column(insertable = false,updatable = false)
+    private Timestamp createTime;
     @JsonIgnore
-    private Date update_time;
+    @Column(insertable = false,updatable = false)
+    private Timestamp updateTime;
     @JsonIgnore
-    private Date delete_time;
+    @Column(insertable = false,updatable = false)
+    private Timestamp deleteTime;
 }

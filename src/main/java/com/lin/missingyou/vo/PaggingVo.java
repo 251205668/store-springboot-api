@@ -6,6 +6,7 @@
 package com.lin.missingyou.vo;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.domain.Page;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class PaggingVo<T> {
     private Long total;
     private Integer count;
@@ -27,6 +29,8 @@ public class PaggingVo<T> {
         this.initPageParamters(pageT);
         this.items = pageT.getContent();
     }
+
+
     void initPageParamters(Page<T> pageT){
         this.total = pageT.getTotalElements();
         this.count= pageT.getSize();
