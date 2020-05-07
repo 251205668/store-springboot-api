@@ -27,5 +27,15 @@ public class SpuService {
         Pageable pageable = PageRequest.of(pageNum,size, Sort.by("createTime").descending());
         return this.spuRepositpry.findAll(pageable);
     }
+    public Page<Spu> getListByCId(Integer pageNum,Integer size,Boolean isroot,Long cid){
+        Pageable pageable = PageRequest.of(pageNum,size);
+        Page<Spu> page = null;
+        if(isroot){
+            page = this.spuRepositpry.findAllByRootCategoryIdOrderByCreateTimeDesc(cid,pageable);
+        }else{
+            page = this.spuRepositpry.findAllByCategoryIdOrderByCreateTimeDesc(cid,pageable);
+        }
+        return page;
+    }
 
 }

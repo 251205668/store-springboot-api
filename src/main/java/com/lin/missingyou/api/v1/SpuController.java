@@ -68,4 +68,13 @@ public class SpuController {
         Page<Spu> spuPage = spuService.getLatestPagingSpu(pageCounter.getPage(),pageCounter.getCount());
         return new PagingDozerVo(spuPage,SpuSimplifyVo.class);
     }
+    @GetMapping("/category/{id}")
+    public PagingDozerVo<Spu,SpuSimplifyVo>getByCategoryId(@PathVariable @Positive(message = "{id.positive}") Long id,
+                                                           @RequestParam(defaultValue = "false") Boolean isroot,
+                                                           @RequestParam(defaultValue = "0") Integer start,
+                                                           @RequestParam(defaultValue = "10") Integer count){
+        pageCounter pageCounter =CommonUtil.convertStartToPage(start,count);
+        Page<Spu> page = spuService.getListByCId(start,count,isroot,id);
+        return new PagingDozerVo<>(page,SpuSimplifyVo.class);
+    }
 }
